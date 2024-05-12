@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Form Validation</title>
+<style>
+.error {
+  color: red;
+}
+</style>
+</head>
+<body>
+
+<h2>Form Validation</h2>
+
+<form id="validationForm">
+  <input type="text" id="name" name="name" placeholder="Name" required><br><br>
+
+  <input type="text" id="ccnum" name="ccnum" placeholder="Credit Card Number" required><br><br>
+
+  <input type="text" id="cvv" name="cvv" placeholder="CVV" required><br><br>
+
+  <select id="expiryMonth" required>
+    <option value="">Month</option>
+  </select>
+  <select id="expiryYear" required>
+    <option value="">Year</option>
+  </select><br><br>
+
+  <input type="submit" value="Submit">
+</form>
+
+<script>
+document.getElementById("validationForm").addEventListener ("submit", function(event) 
+
+{
+  event.preventDefault();
+  var name = document.querySelector("#name").value;
+  var ccnum = document.querySelector("#ccnum").value;
+  var cvv = document.querySelector("#cvv").value;
+  var expiryMonth = document.querySelector("#expiryMonth").value;
+  var expiryYear = document.querySelector("#expiryYear").value;
+  var currentYear = new Date().getFullYear();
+  var currentMonth = new Date().getMonth() + 1;
+
+  // Regular expressions for validation
+  var nameRegex = /^[A-Za-z]+$/;
+  var ccnumRegex = /^[0-9]{16}$/;
+  var cvvRegex = /^[0-9]{3}$/;
+
+  // Validation logic
+  if (!name.match(nameRegex)) {
+    alert("Name must contain only alphabets.");
+    return false;
+  }
+  if (!ccnum.match(ccnumRegex) || !startsWithValidCCDigits(ccnum)) {
+    alert("Invalid credit card number.");
+    return false;
+  }
+  if (!cvv.match(cvvRegex)) {
+    alert("Invalid CVV.");
+    return false;
+  }
+  if (expiryYear < currentYear || (expiryYear == currentYear && expiryMonth < currentMonth)) {
+    alert("Expiry date must be after current date.");
+    return false;
+  }
+
+  // If all validations pass, submit the form
+  this.submit();
+});
+
+function startsWithValidCCDigits(ccnum) {
+  // Valid credit card numbers start with 4, 5, or 6
+  var validPrefixes = /^(4|5|6)/;
+  return ccnum.match(validPrefixes);
+}
+
+// Populate expiry year options dynamically
+var expiryYearSelect = document.querySelector("#expiryYear");
+var currentYear = new Date().getFullYear();
+for (var i = currentYear; i <= currentYear + 10; i++) {
+  var option = document.createElement("option");
+  option.text = i;
+  option.value = i;
+  expiryYearSelect.appendChild(option);
+}
+
+// Populate expiry month options dynamically
+var expiryMonthSelect = document.querySelector("#expiryMonth");
+var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+for (var i = 0; i < months.length; i++) {
+  var option = document.createElement("option");
+  option.text = months[i];
+  option.value = i + 1;
+  expiryMonthSelect.appendChild(option);
+}
+</script>
+
+</body>
+</html>
